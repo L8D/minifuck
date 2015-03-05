@@ -1,6 +1,7 @@
 name:                yabi
 version:             0.1.0.0
 synopsis:            Yet Another Brainfuck Interpreter
+description:         Yet Another Brainfuck Interpreter for muno
 license:             MIT
 license-file:        LICENSE
 author:              Tenor Biel
@@ -8,6 +9,9 @@ maintainer:          tenorbiel@gmail.com
 category:            Language
 build-type:          Simple
 cabal-version:       >=1.10
+source-repository head
+  type:              git
+  location:          https://github.com/L8D/yabi.git
 
 library
   ghc-options:         -Wall
