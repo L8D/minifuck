@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell, GeneralizedNewtypeDeriving #-}
 
-module MiniFuck.Types
+module Yabi.Types
     ( VM(..)
     , Inst(..)
     , World(..)

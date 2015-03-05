@@ -1,4 +1,4 @@
-module MiniFuck.Engine
+module Yabi.Engine
     ( run
     , initWorld
     ) where
@@ -11,7 +11,7 @@ import Prelude         hiding (null, head)
 
 import qualified Data.IntMap as IM
 
-import MiniFuck.Types
+import Yabi.Types
 
 initWorld :: World
 initWorld = World IM.empty 0

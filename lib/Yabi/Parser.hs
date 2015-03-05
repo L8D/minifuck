@@ -1,4 +1,4 @@
-module MiniFuck.Parser
+module Yabi.Parser
     ( programParser
     ) where
 
@@ -6,7 +6,7 @@ import Control.Monad
 import Data.Functor
 import Text.Parsec
 
-import MiniFuck.Types
+import Yabi.Types
 
 nothings :: Parsec String () Char
 nothings = noneOf "><+-.,[]"
