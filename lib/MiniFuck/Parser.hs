@@ -18,12 +18,7 @@ programParser = do
     return is
 
 instsParser :: Parsec String () [Inst]
-instsParser = do
-    skipMany nothings
-    x <- instParser
-    skipMany nothings
-    xs <- instsParser <|> return []
-    return (x:xs)
+instsParser = skipMany nothings >> instParser `sepEndBy` many nothings
 
 instParser :: Parsec String () Inst
 instParser = msum
