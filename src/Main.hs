@@ -6,7 +6,7 @@ import Control.Monad.State
 import System.Environment
 import Text.Parsec
 
-import MiniFuck
+import Yabi
 
 runProgram :: String -> IO ()
 runProgram s = case parse programParser "" s of
