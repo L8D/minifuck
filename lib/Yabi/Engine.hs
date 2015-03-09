@@ -1,3 +1,5 @@
+{-# LANGUAGE RankNTypes #-}
+
 module Yabi.Engine
     ( run
     , initWorld
@@ -7,33 +9,45 @@ import Control.Monad.Trans
 import Data.ByteString
 import Control.Lens
 import System.IO       (stdin, stdout)
+import Data.Word
 import Prelude         hiding (null, head)
 
-import qualified Data.IntMap as IM
+import qualified Data.Stream as S
 
 import Yabi.Types
 
 initWorld :: World
-initWorld = World IM.empty 0
+initWorld = World (S.repeat 0) 0 (S.repeat 0)
 
 run :: [Inst] -> VM ()
 run [] = return ()
 run (x:xs) = inst x >> run xs
 
+shift :: Lens' World (S.Stream Word8) -> VM Word8
+shift g = g %%= \(S.Cons x xs) -> (x, xs)
+
+unshift :: Word8 -> Lens' World (S.Stream Word8) -> VM ()
+unshift x g = g %= S.Cons x
+
 inst :: Inst -> VM ()
-inst Next = pos += 1
-inst Prev = pos -= 1
-inst Incr = use pos >>= \p -> array . at p %= Just . maybe 1 (+1)
-inst Decr = use pos >>= \p -> array . at p %= Just . maybe (-1) (+ (-1))
+inst Next = do
+    c <- use here
+    r <- shift right
+    unshift c left
+    here .= r
+inst Prev = do
+    c <- use here
+    l <- shift left
+    unshift c right
+    here .= l
+inst Incr = here += 1
+inst Decr = here -= 1
 inst GetC = do
     bs <- liftIO $ hGet stdin 1
-    p <- use pos
-    array . at p ?= if null bs then -1 else head bs
+    here .= if null bs then -1 else head bs
 inst PutC = do
-    p <- use pos
-    c <- uses (array . at p) (maybe 0 id)
+    c <- use here
     liftIO $ hPut stdout (pack [c])
 inst (Loop blk) = do
-    p <- use pos
-    c <- uses (array . at p) (maybe 0 id)
+    c <- use here
     if c == 0 then return () else run blk >> inst (Loop blk)

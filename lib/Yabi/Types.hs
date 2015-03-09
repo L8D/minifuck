@@ -4,8 +4,9 @@ module Yabi.Types
     ( VM(..)
     , Inst(..)
     , World(..)
-    , array
-    , pos
+    , left
+    , here
+    , right
     ) where
 
 import Control.Monad.State
@@ -13,7 +14,7 @@ import Control.Applicative
 import Control.Lens
 import Data.Word
 
-import qualified Data.IntMap as IM
+import qualified Data.Stream as S
 
 data Inst
     = Next
@@ -33,8 +34,9 @@ newtype VM a = VM { runVM :: StateT World IO a }
              )
 
 data World = World
-    { _array :: IM.IntMap Word8
-    , _pos   :: Int
+    { _left  :: S.Stream Word8
+    , _here  :: Word8
+    , _right :: S.Stream Word8
     }
 
 makeLenses ''World
